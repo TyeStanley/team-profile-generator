@@ -53,9 +53,59 @@ const questions = {
       choices: [ "Yes", "No" ]
     }
   ],
-  
+
   // Engineer Questions
   Engineer: [
+    {
+      type: "input",
+      name: "name",
+      message: "What is the engineer's name?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter engineer's name." }
+      }
+    },
+    {
+      type: "input",
+      name: "id",
+      message: "What is the engineer's id?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter engineer's id." }
+      }
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "What is the engineer's email address?",
+      validate: (value) => {
+        if (emailValidator.validate(value)) {
+          return true;
+        } else { return "Please enter a valid email address." }
+      }
+    },
+    {
+      type: "input",
+      name: "github",
+      message: "What is the engineer's GitHub username?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter engineer's Github username. " }
+      }
+    },
+    {
+      type: "list",
+      name: "addNewEmployee",
+      message: "Do you want to add another employee?",
+      choices: [ "Yes", "No" ]
+    }
+  ],
+  
+  // Intern Questions
+  Intern: [
 
   ]
 }
