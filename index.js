@@ -103,12 +103,57 @@ const questions = {
       choices: [ "Yes", "No" ]
     }
   ],
-  
+
   // Intern Questions
   Intern: [
-
+    {
+      type: "input",
+      name: "name",
+      message: "What is the intern's name?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter intern's name." }
+      }
+    },
+    {
+      type: "input",
+      name: "id",
+      message: "What is the intern's id?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter intern's id." }
+      }
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "What is the intern's email address?",
+      validate: (value) => {
+        if (emailValidator.validate(value)) {
+          return true;
+        } else { return "Please enter a valid email address." }
+      }
+    },
+    {
+      type: "input",
+      name: "school",
+      message: "What school is the intern attending?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter the name of the school." }
+      }
+    },
+    {
+      type: "list",
+      name: "addNewEmployee",
+      message: "Do you want to add another employee?",
+      choices: [ "Yes", "No" ]
+    }
   ]
-}
+};
 
 // Creates a function to write a new index.html file to the dist folder
 // function writeToFile(fileName, data) {
