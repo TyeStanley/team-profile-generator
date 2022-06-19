@@ -1,33 +1,81 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generateIndexPage = require('./src/generateIndexPage');
+const emailValidator = require('email-validator');
 
-const questions = [
-  {
-    type: 'text',
-    name: 'name',
-  },
-  {
+const questions = {
+  // Manager Questions
+  Manager: [
+    {
+      type: "input",
+      name: "name",
+      message: "What is the manager's name?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter manager's name." }
+      }
+    },
+    {
+      type: "input",
+      name: "id",
+      message: "What is the manager's id?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { return "Please enter manager's id." }
+      }
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "What is the manager's email address?",
+      validate: (value) => {
+        if (emailValidator.validate(value)) {
+          return true;
+        } else { return "Please enter a valid email address." }
+      }
+    },
+    {
+      type: "input",
+      name: "officeNumber",
+      message: "What is the manager's office number?",
+      validate: (value) => {
+        if (value) {
+          return true;
+        } else { "Please enter manager's office number." }
+      }
+    },
+    {
+      type: "list",
+      name: "addNewEmployee",
+      message: "Do you want to add another employee?",
+      choices: [ "Yes", "No" ]
+    }
+  ],
+  
+  // Engineer Questions
+  Engineer: [
 
-  },
-]
+  ]
+}
 
 // Creates a function to write a new index.html file to the dist folder
-function writeToFile(fileName, data) {
-    fs.writeToFile(fileName, data, (err) => {
-        if (err) {
-            console.log(err);
-        }
-    })
-}
+// function writeToFile(fileName, data) {
+//     fs.writeToFile(fileName, data, (err) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//     })
+// }
 
-function init() {
-    inquirer
-        .prompt(questions)
-        .then( (data) => {
-            writeToFile('index.html', data)
-        })
-}
+// function init() {
+//     inquirer
+//         .prompt(questions)
+//         .then( (data) => {
+//             writeToFile('index.html', data)
+//         })
+// }
 
 // Function call to initialize the index.html
 init();
