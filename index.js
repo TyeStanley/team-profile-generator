@@ -1,12 +1,15 @@
 const inquirer = require('inquirer');
-const fs = require('fs');
-const generateIndexPage = require('./src/generateIndexPage');
 const emailValidator = require('email-validator');
+const fs = require('fs');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const generateIndexPage = require('./src/generateIndexPage');
 
-const questions = {
+
   // Manager Questions
-  Manager: [
-    {
+  const managerQuestions = [
+    { // 0
       type: "input",
       name: "name",
       message: "What is the manager's name?",
@@ -16,7 +19,7 @@ const questions = {
         } else { return "Please enter manager's name." }
       }
     },
-    {
+    { // 1
       type: "input",
       name: "id",
       message: "What is the manager's id?",
@@ -26,7 +29,7 @@ const questions = {
         } else { return "Please enter manager's id." }
       }
     },
-    {
+    { // 2
       type: "input",
       name: "email",
       message: "What is the manager's email address?",
@@ -36,7 +39,7 @@ const questions = {
         } else { return "Please enter a valid email address." }
       }
     },
-    {
+    { // 3
       type: "input",
       name: "officeNumber",
       message: "What is the manager's office number?",
@@ -46,17 +49,17 @@ const questions = {
         } else { "Please enter manager's office number." }
       }
     },
-    {
+    { // 4
       type: "list",
       name: "addNewEmployee",
       message: "Do you want to add another employee?",
       choices: [ "Yes", "No" ]
     }
-  ],
+  ]
 
   // Engineer Questions
-  Engineer: [
-    {
+  const engineerQuestions = [
+    { // 0
       type: "input",
       name: "name",
       message: "What is the engineer's name?",
@@ -66,7 +69,7 @@ const questions = {
         } else { return "Please enter engineer's name." }
       }
     },
-    {
+    { // 1
       type: "input",
       name: "id",
       message: "What is the engineer's id?",
@@ -76,7 +79,7 @@ const questions = {
         } else { return "Please enter engineer's id." }
       }
     },
-    {
+    { // 2
       type: "input",
       name: "email",
       message: "What is the engineer's email address?",
@@ -86,7 +89,7 @@ const questions = {
         } else { return "Please enter a valid email address." }
       }
     },
-    {
+    { // 3
       type: "input",
       name: "github",
       message: "What is the engineer's GitHub username?",
@@ -96,17 +99,17 @@ const questions = {
         } else { return "Please enter engineer's Github username. " }
       }
     },
-    {
+    { // 4
       type: "list",
       name: "addNewEmployee",
       message: "Do you want to add another employee?",
       choices: [ "Yes", "No" ]
     }
-  ],
+  ]
 
   // Intern Questions
-  Intern: [
-    {
+  const internQuestions = [
+    { // 0
       type: "input",
       name: "name",
       message: "What is the intern's name?",
@@ -116,7 +119,7 @@ const questions = {
         } else { return "Please enter intern's name." }
       }
     },
-    {
+    { // 1
       type: "input",
       name: "id",
       message: "What is the intern's id?",
@@ -126,7 +129,7 @@ const questions = {
         } else { return "Please enter intern's id." }
       }
     },
-    {
+    { // 2
       type: "input",
       name: "email",
       message: "What is the intern's email address?",
@@ -136,7 +139,7 @@ const questions = {
         } else { return "Please enter a valid email address." }
       }
     },
-    {
+    { // 3
       type: "input",
       name: "school",
       message: "What school is the intern attending?",
@@ -146,31 +149,67 @@ const questions = {
         } else { return "Please enter the name of the school." }
       }
     },
-    {
+    { // 4
       type: "list",
       name: "addNewEmployee",
       message: "Do you want to add another employee?",
       choices: [ "Yes", "No" ]
     }
   ]
-};
+
+// Selects the role
+const roleSelect = {
+    type: "list",
+    name: "selectRole",
+    message: "Select what a role to add.",
+    choices: [ "Manager", "Engineer", "Intern" ]
+}
 
 // Creates a function to write a new index.html file to the dist folder
-// function writeToFile(fileName, data) {
-//     fs.writeToFile(fileName, data, (err) => {
-//         if (err) {
-//             console.log(err);
-//         }
-//     })
-// }
+function writeToFile(fileName, data) {
+  fs.writeToFile(fileName, data, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  })
+}
+// seperate manager into its own function
+let teamArray = [];
+let managerLock = true;
+function init() {
+  inquirer
+    .prompt(roleSelect)
+    .then((answer) => {
+      if (answer.selectRole === 'Manager' && managerLock) {
+        managerLock = false;
+        return inquirer.prompt(managerQuestions).then((data) => {
+          teamArray.push(new Manager(data.name, data.id, data.email, data.officeNumber));
+          if (data.addNewEmployee === 'Yes') {
+            init();
+            return;
+          }
+        });
+      }
+      else if (answer.selectRole === 'Engineer') {
+        return inquirer.prompt(engineerQuestions);
+      }
+      else if (answer.selectRole === 'Intern') {
+        return inquirer.prompt(internQuestions);
+      } else {
+        console.log('You can only have one manager.')
+        init();
+      }
+    })
+    .then(() => {
+      // Write file goes here?
+      writeToFile('./dist/index.html', generateIndexPage(teamArray));
+    })
+}
+// const managerObj = new Manager(data.name, data.id, data.email, data.officeNumber);
+// const engineerObj = new Engineer(data.name, data.id, data.email, data.github);
+// const internObj = new Intern(data.name, data.id, data.email, data.school);
 
-// function init() {
-//     inquirer
-//         .prompt(questions)
-//         .then( (data) => {
-//             writeToFile('index.html', data)
-//         })
-// }
+// writeToFile('./dist/index.html', data)
 
 // Function call to initialize the index.html
 init();
