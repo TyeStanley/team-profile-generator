@@ -33,7 +33,7 @@ This is a node.js app that uses the command-line with the help of inquirer to ta
 
 * Sample picture to showcase how it would look like
 
-![Showcase](src\team-profile-generator-demo-example.PNG)
+![Showcase](./src/team-profile-generator-demo-example.PNG)
 
 [Video Demo](https://drive.google.com/file/d/1SE2Y4ZsGXy0GLbLkncT2f4bkuOIiwgGj/view?usp=sharing)
 
